@@ -21,121 +21,122 @@ function removeRightFace(geo) {
             newIndices.push(indices[i], indices[i + 1], indices[i + 2]);
         }
     }
+}
 
-    // 创建隧道并添加到场景
-    // 修改createTunnel函数
-    const createTunnel = (scene, tunelPosition = {}) => {
-        const tunnelLength = 1; // 隧道长度
-        const tunnelSize = 1; // 隧道宽度
+// 创建隧道并添加到场景
+// 修改createTunnel函数
+const createTunnel = (scene, tunelPosition = {}) => {
+    const tunnelLength = 1; // 隧道长度
+    const tunnelSize = 1; // 隧道宽度
 
-        const tunnelGeometry = new THREE.BoxGeometry(
-            tunnelLength,
-            tunnelSize,
-            tunnelSize
-        );
-        const tunnelMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0x2c3e50,
-            metalness: 0.2,
-            roughness: 0.7,
-            side: THREE.BackSide,
-        });
+    const tunnelGeometry = new THREE.BoxGeometry(
+      tunnelLength,
+      tunnelSize,
+      tunnelSize
+    );
+    const tunnelMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x2c3e50,
+        metalness: 0.2,
+        roughness: 0.7,
+        side: THREE.BackSide,
+    });
 
-        const tunnel = new THREE.Mesh(tunnelGeometry, tunnelMaterial);
+    const tunnel = new THREE.Mesh(tunnelGeometry, tunnelMaterial);
 
-        // 创建隧道组，用于调整锚点
-        const tunnelGroup = new THREE.Group();
-        // 将隧道向左移动，使左侧边缘与组原点对齐
-        tunnel.position.x = tunnelLength / 2;
-        tunnelGroup.add(tunnel);
-        // 调整组位置，使隧道回到指定位置
-        tunnelGroup.position.set(
-            tunelPosition.x || 0,
-            tunelPosition.y || 0,
-            tunelPosition.z || 0
-        );
-        scene.add(tunnelGroup);
-        return tunnelGroup; // 返回组而不是隧道本身
-    };
+    // 创建隧道组，用于调整锚点
+    const tunnelGroup = new THREE.Group();
+    // 将隧道向左移动，使左侧边缘与组原点对齐
+    tunnel.position.x = tunnelLength / 2;
+    tunnelGroup.add(tunnel);
+    // 调整组位置，使隧道回到指定位置
+    tunnelGroup.position.set(
+      tunelPosition.x || 0,
+      tunelPosition.y || 0,
+      tunelPosition.z || 0
+    );
+    scene.add(tunnelGroup);
+    return tunnelGroup; // 返回组而不是隧道本身
+};
 
-    function init() {
-        // 1. 初始化基础环境
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xf8f9fa);
 
-        // 相机设置
-        const camera = new THREE.PerspectiveCamera(
-            75,
-            window.innerWidth / window.innerHeight,
-            0.1,
-            1000
-        );
-        camera.position.set(15, 15, 15);
-        camera.lookAt(0, 0, 0);
+init()
+function init() {
+    // 1. 初始化基础环境
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf8f9fa);
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+    // 相机设置
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    camera.position.set(15, 15, 15);
+    camera.lookAt(0, 0, 0);
 
-        // 轨道控制器
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
+    const renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-        // 2. 创建正方体
-        const cubeGeometry = new THREE.BoxGeometry(15, 15, 15);
-        const cubeMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0x3498db,
-            metalness: 0.3,
-            roughness: 0.4,
-            transparent: true,
-            opacity: 0.5,
-        });
-        const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-        scene.add(cube);
+    // 轨道控制器
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
 
-        // 3. 添加辅助线
-        const axesHelper = new THREE.AxesHelper(10);
-        scene.add(axesHelper);
+    // 2. 创建正方体
+    const cubeGeometry = new THREE.BoxGeometry(15, 15, 15);
+    const cubeMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x3498db,
+        metalness: 0.3,
+        roughness: 0.4,
+        transparent: true,
+        opacity: 0.5,
+    });
+    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    scene.add(cube);
 
-        // 4. 光源设置
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
+    // 3. 添加辅助线
+    const axesHelper = new THREE.AxesHelper(10);
+    scene.add(axesHelper);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(5, 10, 5);
-        scene.add(directionalLight);
+    // 4. 光源设置
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
 
-        let tunnel = createTunnel(scene, {
-            x: 3,
-            y: 1.5,
-            z: 0,
-        });
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(5, 10, 5);
+    scene.add(directionalLight);
 
-        console.log(tunnel, "tunnels");
-        let scaleX = 0.1;
+    let tunnel = createTunnel(scene, {
+        x: 3,
+        y: 1.5,
+        z: 0,
+    });
 
-        // 5. 动画循环
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            scaleX += 0.001;
-            if (scaleX >= 5) {
-                scaleX = 5;
-            } else {
-                tunnel.scale.set(-scaleX, 1, 1);
-            }
+    console.log(tunnel, "tunnels");
+    let scaleX = 0.1;
 
-            renderer.render(scene, camera);
+    // 5. 动画循环
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        scaleX += 0.001;
+        if (scaleX >= 5) {
+            scaleX = 5;
+        } else {
+            tunnel.scale.set(-scaleX, 1, 1);
         }
-        animate();
 
-        // 6. 窗口自适应
-        window.addEventListener("resize", () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+        renderer.render(scene, camera);
     }
 
-    export default {
-        init,
-    };
+    animate();
+
+    // 6. 窗口自适应
+    window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+}
+
