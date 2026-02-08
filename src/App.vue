@@ -59,6 +59,11 @@ const onStartExcavate = () => {
   isExcavating.value = !isExcavating.value
   threeInterface.startExcavating(isExcavating.value)
 }
+const onRestExcavate = () => {
+  isExcavating.value = false
+  threeInterface.resetExcavating()
+}
+
 
 // 控制静态隧道是否显示
 const onHideOrShowTunnel = () => {
@@ -87,6 +92,10 @@ const onHideOrShowTunnelProgress = () => {
       <div class="control_area">
         <button @click="onStartExcavate">
           {{ isExcavating ? '停止挖掘' : '开始挖掘' }}
+        </button>
+
+        <button @click="onRestExcavate">
+          重置挖掘场景
         </button>
       </div>
 

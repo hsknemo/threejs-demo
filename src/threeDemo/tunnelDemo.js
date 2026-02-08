@@ -17,6 +17,12 @@ const tunelConfig = {
     radiusTop: 1,
     radiusBottom: 2,
     height: 1,
+    visible: true,
+
+    reset() {
+      let mesh = findMesh(tunelConfig.car.name)
+      mesh.position.set(tunelConfig.car.x, tunelConfig.car.y, tunelConfig.car.z)
+    },
 
     // 展示html
     showHtml(ev){
@@ -60,6 +66,7 @@ const tunelConfig = {
     transparent: true,
     name: 'changeTunnel',
     width: .5,
+    visible: false,
     height: 4,
     depth: 4,
     tunnelLength: 0,
@@ -68,8 +75,13 @@ const tunelConfig = {
     y: 1,
     z: 0,
 
-
-
+    reset() {
+      let mesh = findMesh(tunelConfig.change.name)
+      mesh.position.set(tunelConfig.change.x, tunelConfig.change.y, tunelConfig.change.z)
+      scaleX = 0.1
+      mesh.scale.set(0, 1, 1)
+      mesh.visible = false
+    },
     setVisible() {
       let mesh = findMesh(tunelConfig.change.name)
       let visible = mesh.visible;
@@ -80,6 +92,7 @@ const tunelConfig = {
         if (!gl_isExcavating) return;
 
         let currentTunnelGroup = findMesh(tunelConfig.change.name);
+        currentTunnelGroup.visible = true;
         if (!currentTunnelGroup) return; // 确保找到了目标对象
 
         scaleX += 0.1; // 加快增长速度
@@ -112,6 +125,7 @@ const tunelConfig = {
     transparent: true,
     tunnelLength: 5,
     name: 'staticTunnel',
+    visible: true,
     width: 10,
     height: 3,
     depth: 3,
@@ -193,6 +207,7 @@ const createTunnel = (scene, tunelConfig = {}, name) => {
     tunelConfig.z || 0
   );
   tunnelGroup.name = name
+  tunnelGroup.visible = tunelConfig.visible
   tunnelGroup.renderOrder = tunelConfig.zIndex
   scene.add(tunnelGroup);
   return tunnelGroup; // 返回组而不是隧道本身
@@ -215,6 +230,7 @@ const createCar = (scene, tunelConfig = {}, name) => {
   // 调整位置
   car.rotateX(Math.PI / 2)
   car.rotateZ(Math.PI / 2)
+  car.visible = tunelConfig.visible
   scene.add(car)
   return car
 }
@@ -310,6 +326,11 @@ window.addEventListener("resize", () => {
 window.threeInterface = {
   startExcavating(isExcavating) {
     gl_isExcavating = isExcavating
+  },
+  resetExcavating() {
+    gl_isExcavating = false
+    tunelConfig.car.reset()
+    tunelConfig.change.reset()
   },
 
   // 控制静态隧道是否显示
