@@ -14,8 +14,8 @@ const tunelConfig = {
     opacity: 1,
     transparent: true,
     name: 'car',
-    radiusTop: 1,
-    radiusBottom: 2,
+    radiusTop: .5,
+    radiusBottom: 1,
     height: 1,
     visible: true,
 
@@ -112,6 +112,7 @@ const tunelConfig = {
         tunelConfig.car.update(currentTunnelGroup.position.x - (scaleX - 1) * halfWidth, currentTunnelGroup.position.y, currentTunnelGroup.position.z)
         // 结束条件
         if (scaleX >= 20) {
+          currentTunnelGroup.scale.set(20 , 1, 1);
           threeInterface.startExcavating(false);
           window.dispatchEvent(startExcavatingEndEvent);
         }
@@ -129,7 +130,7 @@ const tunelConfig = {
     width: 10,
     height: 3,
     depth: 3,
-    zIndex: 1,
+    zIndex: 3,
     x: 1,
     y: 1,
     z: 0,
