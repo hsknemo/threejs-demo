@@ -83,7 +83,7 @@ const onHideOrShowTunnelProgress = () => {
 </script>
 
 <template>
-  <div class="control_panel">
+  <div class="control_panel" v-if="false">
     <h3>控制面板</h3>
     <div class="panel">
       <div class="tit">

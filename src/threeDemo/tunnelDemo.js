@@ -1,12 +1,12 @@
 import * as THREE from "three"
 import {OrbitControls} from "three/addons/controls/OrbitControls.js"
-import {OBJLoader} from "three/addons/loaders/OBJLoader.js"
 import GUI from "three/examples/jsm/libs/lil-gui.module.min.js"
 import cubeModel from "./model/jsModel/cubeModel.js";
 import groundModel from "./model/jsModel/groundModel.js";
 import carModel from "./model/jsModel/carModel.js";
 import digProgressModel from "./model/jsModel/digProgressModel.js";
 import staticTunnelModel from "./model/jsModel/staticTunnelModel.js";
+import shaderDemo from "./model/jsModel/shaderDemo.js";
 
 window.camera = null
 window.scene = null
@@ -30,6 +30,8 @@ window.sceneConfig = {
   digProgress: digProgressModel,
   // 隧道默认
   staticTunnel: staticTunnelModel,
+
+  shaderDemo: shaderDemo,
 }
 
 // 添加点击事件
@@ -139,6 +141,9 @@ function initSceneMesh(scene) {
   sceneConfig.car.layout(scene)
   // 地面模型初始化
   sceneConfig.ground.layout(scene)
+
+  // shader demo
+  sceneConfig.shaderDemo.layout(scene)
 }
 
 
@@ -151,6 +156,7 @@ function animate() {
   requestAnimationFrame(animate)
   controls.update()
   sceneConfig.car.update()
+  sceneConfig.shaderDemo.update()
   renderer.render(scene, camera)
 }
 
