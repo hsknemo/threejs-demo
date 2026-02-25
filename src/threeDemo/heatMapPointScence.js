@@ -5,6 +5,7 @@ import cube from "./model/smoke/cube";
 import heatMapPoint from "./model/heatmapPoint/heatMapPoint.js";
 import cubeBorderLayer from "./model/cube/cubeBorderLayer.js";
 import sensorLayer from "./model/Sensor/SensorLayer.js";
+import planeLayer from "./model/plane/planeLayer.js";
 
 window.camera = null;
 window.scene = null;
@@ -21,6 +22,7 @@ window.sceneConfig = {
   cubeBorderLayer,
   heatMapPoint,
   sensorLayer,
+  planeLayer,
 };
 
 // 初始化场景模型
@@ -29,6 +31,7 @@ function initSceneMesh(scene) {
   window.sceneConfig.cube.layout(scene);
   window.sceneConfig.heatMapPoint.layout(scene);
   window.sceneConfig.sensorLayer.layout(scene);
+  window.sceneConfig.planeLayer.layout(scene);
 }
 
 // 添加点击事件
