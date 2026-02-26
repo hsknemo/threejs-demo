@@ -5,17 +5,17 @@ import { findMeshFromScene } from "../../utils/meshControl.js";
 export default {
   name: "smokePointLayer",
   // 粒子数量
-  particleCount: 2000,
+  particleCount: 11000,
   // 粒子大小
-  particleSize: 0.2,
+  particleSize: 0.35,
   // 扩散半径，控制烟雾分布范围
-  spreadRadius: 30,
+  spreadRadius: 50,
   // 上升速度，控制烟雾上升的快慢
-  riseSpeed: 0.02,
+  riseSpeed: 0.03,
   // 扩散速度，控制烟雾水平扩散的速度
   spreadSpeed: 0.05,
   // 透明度，控制烟雾的透明程度
-  opacity: 0.4,
+  opacity: 0.5,
   // 烟雾颜色
   color: "red",
   // 粒子系统对象
@@ -88,6 +88,7 @@ export default {
     this.particles = new THREE.Points(geometry, material);
     // 设置粒子系统名称
     this.particles.name = this.name;
+    this.particles.position.set(0, -20, 0);
     // 将粒子系统添加到场景
     scene.add(this.particles);
   },
