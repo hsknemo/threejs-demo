@@ -5,6 +5,8 @@ import senceCube from "./model/sence/senceCube.js";
 import cubeHotLayer from "./model/cubeHot/cubeHotLayer.js";
 import smokeLayer from "./model/smoke/smokePoint.js";
 import cubeBorderLayer from "./model/cube/cubeBorderLayer.js";
+import smokeCube from "./model/smoke/cube.js";
+import { findMeshFromScene } from "./utils/meshControl.js";
 window.camera = null;
 window.scene = null;
 window.controls = null;
@@ -16,14 +18,15 @@ window.gui = null;
 // 小窗口视图
 let miniCamera, miniRenderer, miniControls;
 let miniWidth = 200;
-let miniHeight = 150;
-let miniMargin = 10;
+let miniHeight = 200;
+let miniMargin = 150;
 
 window.sceneConfig = {
   senceCube,
   cubeHotLayer,
   smokeLayer,
   cubeBorderLayer,
+  smokeCube,
 };
 
 function initSceneMesh(scene) {
@@ -31,6 +34,7 @@ function initSceneMesh(scene) {
   window.sceneConfig.cubeBorderLayer.layout(scene);
   window.sceneConfig.cubeHotLayer.layout(scene);
   window.sceneConfig.smokeLayer.layout(scene);
+  window.sceneConfig.smokeCube.layout(scene);
 }
 
 function createRayCaster() {
@@ -54,7 +58,15 @@ function createRayCaster() {
         );
       });
       if (realObj) {
-        console.log("点到物体：", realObj.object.name);
+        // console.log("点到物体：", realObj.object.name);
+        if (realObj.object.name && window.sceneConfig[realObj.object.name]) {
+          // 根据界面勾选判断物体是否可以被点击
+          if (window.sceneConfig[realObj.object.name].canClick) {
+            if (window.sceneConfig[realObj.object.name].layerProxyClick) {
+              window.sceneConfig[realObj.object.name].layerProxyClick(event);
+            }
+          }
+        }
       }
     }
   }
@@ -68,6 +80,7 @@ function initGUIControl() {
 
 function addLight(scene) {
   const ambientLight = new THREE.AmbientLight(0xffffff, 2.3);
+  ambientLight.name = "ambientLight";
   scene.add(ambientLight);
 
   const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
@@ -167,8 +180,8 @@ function createMiniView() {
   const container = document.createElement("div");
   container.style.cssText = `
     position: fixed;
-    top: ${miniMargin}px;
-    left: ${miniMargin}px;
+    right: 50px;
+    top: 100px;
     width: ${miniWidth}px;
     height: ${miniHeight}px;
     border: 2px solid #00ff00;
@@ -225,3 +238,89 @@ function createMiniView() {
 
   window.miniScene = miniScene;
 }
+
+window.interface = {
+  sceneControl: (item) => {
+    let selectStatus = item.checkStatus;
+    let layerName = item.layerName;
+    console.log(layerName, window.sceneConfig);
+    window.sceneConfig[layerName].setVisible(selectStatus);
+  },
+
+  refreshMeshCanClick(item) {
+    let layerName = item.layerName;
+    if (window.sceneConfig[layerName]) {
+      window.sceneConfig[layerName].canClick = item.canClick;
+    }
+  },
+};
+
+function initCutUI() {
+  setTimeout(() => {
+    // 创建裁切平面的GUI控制
+    const cutFolder = gui.addFolder("场景裁切");
+    let target = findMeshFromScene("smokeCube");
+    target.cutX = 0;
+    target.cutY = 0;
+    target.cutZ = 0;
+    cutFolder
+      .add(target, "cutX", -100, 100, 1)
+      .name("裁切平面x")
+      .onChange((v) => {
+        window.interface.sceneClip(target.cutX, target.cutY, target.cutZ);
+      });
+
+    cutFolder
+      .add(target, "cutY", -100, 100, 1)
+      .name("裁切平面y")
+      .onChange((v) => {
+        window.interface.sceneClip(target.cutX, target.cutY, target.cutZ);
+      });
+
+    cutFolder
+      .add(target, "cutZ", -100, 100, 1)
+      .name("裁切平面z")
+      .onChange((v) => {
+        window.interface.sceneClip(target.cutX, target.cutY, target.cutZ);
+      });
+  }, 2000);
+}
+initCutUI();
+
+// 场景裁切调用方法
+window.interface.sceneClip = (x, y, z) => {
+  // 裁切立方体
+  // if (!item || !item.clipPlanes) return;
+
+  // 获取所有需要裁切的物体
+  const objectsToClip = [];
+  Object.values(window.sceneConfig).forEach((config) => {
+    console.log(config.mesh, config);
+    let mesh = findMeshFromScene(config.name);
+    if (mesh) {
+      objectsToClip.push(mesh);
+    }
+  });
+
+  // 创建裁切平面
+  const clipPlanes = [];
+  const plane = new THREE.Plane(new THREE.Vector3(x, y, z), 50);
+  clipPlanes.push(plane);
+  // 应用裁切平面到物体
+  objectsToClip.forEach((object) => {
+    if (object.material) {
+      if (Array.isArray(object.material)) {
+        object.material.forEach((material) => {
+          material.clippingPlanes = clipPlanes;
+          material.clipShadows = true; // 可选：裁切阴影
+        });
+      } else {
+        object.material.clippingPlanes = clipPlanes;
+        object.material.clipShadows = true;
+      }
+    }
+  });
+
+  // 启用渲染器裁切
+  renderer.localClippingEnabled = true;
+};

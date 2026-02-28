@@ -48,7 +48,7 @@ function getGradientColor(value) {
 // 导出场景配置对象
 export default {
   // 模块名称
-  name: "senceCube",
+  name: "sceneCube",
 
   // 立方体尺寸参数
   width: 50, // 立方体宽度
@@ -98,20 +98,6 @@ export default {
       this.height, // 高度50
       this.depth, // 深度50
     );
-
-    // 使用EdgesGeometry从立方体几何体创建边缘几何体(只显示棱边)
-    const edgesGeometry = new THREE.EdgesGeometry(cubeGeometry);
-
-    // 创建白色线条材质
-    const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0xffffff, // 白色
-      linewidth: 1, // 线宽(部分浏览器可能不支持)
-    });
-
-    // 创建线段网格(用于显示立方体边框)
-    this.wireframeBox = new THREE.LineSegments(edgesGeometry, lineMaterial);
-    this.wireframeBox.name = `${this.name}_wireframe`; // 设置名称便于查找
-    scene.add(this.wireframeBox); // 添加到场景
 
     // ==================== 2. 创建坐标轴 ====================
     // AxesHelper创建三轴坐标指示器(X红、Y绿、Z蓝)
