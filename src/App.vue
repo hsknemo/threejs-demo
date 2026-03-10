@@ -1,7 +1,6 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from "vue";
 import SceneMeshControl from "./components/threeSenceMenu/senceMeshControl.vue";
-import huangPuJiang from "./threeDemo/model/zhcsDemo/huangPuJiang.js";
 
 // 显示控制菜单
 const showMenuList1 = reactive([
@@ -9,7 +8,7 @@ const showMenuList1 = reactive([
     name: "地质体",
     type: "layer",
     canClick: true,
-    layerName: "cubeMesh",
+    layerName: "cube",
     isOpen: true,
     checkStatus: true,
     controlUI: [
@@ -29,52 +28,34 @@ const showMenuList1 = reactive([
       },
     ],
   },
-   {
-    name: "传感器",
-    type: "layer",
-    canClick: true,
-    layerName: "sensorMesh",
-    isOpen: true,
-    checkStatus: true,
-  },
-  {
-    name: "小车移动",
-    type: "mesh",
-    canClick: true,
-    layerName: "excavatorMesh",
-    isOpen: true,
-    checkStatus: true,
-    controlUI: [
-      {
-        componentName: "el-button",
-        events: {
-          click: () => {
-            window.sceneConfig.excavatorMesh.move()
-          },
-        },
-      },
-    ],
-  },
+  //  {
+  //   name: "传感器",
+  //   type: "layer",
+  //   canClick: true,
+  //   layerName: "sensorMesh",
+  //   isOpen: true,
+  //   checkStatus: true,
+  // },
+  // {
+  //   name: "小车移动",
+  //   type: "mesh",
+  //   canClick: true,
+  //   layerName: "excavatorMesh",
+  //   isOpen: true,
+  //   checkStatus: true,
+  //   controlUI: [
+  //     {
+  //       componentName: "el-button",
+  //       events: {
+  //         click: () => {
+  //           window.sceneConfig.excavatorMesh.move()
+  //         },
+  //       },
+  //     },
+  //   ],
+  // },
 ]);
 
-const showMenuList2 = reactive([
-  {
-    name: "智慧城市",
-    type: "layer",
-    canClick: true,
-    layerName: "city",
-    isOpen: true,
-    checkStatus: true,
-  },
-  {
-    name: "黄浦江",
-    type: "layer",
-    canClick: true,
-    layerName: "huangPuJiang",
-    isOpen: true,
-    checkStatus: true,
-  },
-]);
 
 const onChangeScene = (item, menuType) => {
   if (item.type === "layer") {
@@ -171,7 +152,7 @@ const onHideOrShowTunnelProgress = () => {
   <SceneMeshControl
     @refresh-mesh-click="onRefreshMeshClick"
     @menu-click="onChangeScene"
-    :menu-list="showMenuList2"
+    :menu-list="showMenuList1"
   />
 
   <div class="control_panel" v-if="false">

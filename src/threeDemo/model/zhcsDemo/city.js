@@ -10,7 +10,6 @@ export default {
     mesh.visible = bool
   },
   load(scene) {
-    return
     console.log('智慧城市加载')
     const loader = new GLTFLoader()
     let modelUrl = new URL(

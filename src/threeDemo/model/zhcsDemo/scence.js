@@ -1,18 +1,22 @@
 import './scence/index.js'
 
-import city from "./city.js";
-import qiang from "./qiang.js";
+import Cube from "./cube.js";
+import Tunnel from "./tunnel.js";
 
 // 导入场景需要的模型
 window.sceneConfig = {
-  city,
-  qiang,
 }
 
 // 初始化模型
 function initSceneMesh(scene) {
-  sceneConfig.city.load(scene)
-  sceneConfig.qiang.load(scene)
+  // 地质体
+  window.sceneConfig.cube = new Cube({
+    scene,
+  })
+  // 隧道
+  window.sceneConfig.tunnel = new Tunnel({
+    scene,
+  })
 }
 
 initSceneMesh(scene);

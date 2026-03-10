@@ -7,6 +7,6 @@ window.camera = new THREE.PerspectiveCamera(
   0.1,
   3000,
 );
-camera.position.set(30, 30, 30);
+camera.position.set(15, 15, 15);
 camera.lookAt(0, 0, 0);
 
